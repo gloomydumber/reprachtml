@@ -1,0 +1,21 @@
+<html>
+  <head> </head>
+  <body>
+    hi
+    <script>
+      var theUrl =
+        "https://api.worldtradingdata.com/api/v1/stock?symbol=KOSPI.KS&api_token=mkgXnjQlBeDdpzHXsL5nWO7BUD0qVjRrW7onDWO9PcRGZNiE4kqT9Vah9FC1";
+      function httpGetAsync(theUrl, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+        };
+        xmlHttp.open("GET", theUrl, true); // true for asynchronous
+        xmlHttp.send(null);
+        alert("hi");
+      }
+    </script>
+    <!-- https://api.worldtradingdata.com/api/v1/stock?symbol=KOSPI.KS&api_token=mkgXnjQlBeDdpzHXsL5nWO7BUD0qVjRrW7onDWO9PcRGZNiE4kqT9Vah9FC1 -->
+  </body>
+</html>

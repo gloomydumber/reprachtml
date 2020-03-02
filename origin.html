@@ -1,0 +1,30 @@
+<html>
+  <head> </head>
+  <body>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script
+      type="text/javascript"
+      src="http://code.jquery.com/jquery-latest.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="js/jquery.ajax-cross-origin.min.js"
+    ></script>
+    <script type="text/javascript">
+      var stocki;
+      $.ajax({
+        crossOrigin: true,
+        dataType: "json",
+        url:
+          "https://api.worldtradingdata.com/api/v1/stock?symbol=KOSPI.KS&api_token=mkgXnjQlBeDdpzHXsL5nWO7BUD0qVjRrW7onDWO9PcRGZNiE4kqT9Vah9FC1",
+        success: function(data) {
+          stocki = data;
+          tempa = stocki.indexOf("price"); //
+          var realprice = stocki.substr(114, 7);
+          console.log(realprice);
+          document.write(realprice);
+        }
+      });
+    </script>
+  </body>
+</html>

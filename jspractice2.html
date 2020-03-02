@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <title>New Document</title>
+  </head>
+
+  <body>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script
+      type="text/javascript"
+      src="http://code.jquery.com/jquery-latest.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="js/jquery.ajax-cross-origin.min.js"
+    ></script>
+    <script type="text/javascript">
+      var stocki;
+      $.ajax({
+        crossOrigin: true,
+        dataType: "json",
+        url:
+          "https://api.worldtradingdata.com/api/v1/stock?symbol=KOSPI.KS&api_token=mkgXnjQlBeDdpzHXsL5nWO7BUD0qVjRrW7onDWO9PcRGZNiE4kqT9Vah9FC1",
+        success: function(data) {
+          stocki = data;
+          tempa = stocki.indexOf("price"); //
+          var realprice = stocki.substr(114, 7);
+          console.log(realprice);
+        }
+      });
+
+      // here from naver
+      if (msg == "/실검") {
+        var data =
+          org.jsoup.Jsoup.connect(
+            "https://m.search.naver.com/search.naver?query=실시간%20검색어"
+          )
+            .get()
+            .select("span.tit") + "";
+        data = data.replace(/<[^>]+>/g, "");
+        data = data.split("\n");
+        var result = "";
+        for (var n = 0; n < 20; n++) {
+          result += n + 1 + "위: " + data[n] + "\n";
+        }
+        replier.reply("[네이버 실시간 검색어 순위]\n\n" + result.trim());
+      }
+
+      // here from kospi mk ll
+
+      if (msg == "/테스트") {
+        var data = org.jsoup.Jsoup.connect(
+          "https://api.worldtradingdata.com/api/v1/stock?symbol=KOSPI.KS&api_token=mkgXnjQlBeDdpzHXsL5nWO7BUD0qVjRrW7onDWO9PcRGZNiE4kqT9Vah9FC1"
+        ).get();
+
+        replier.reply(data);
+      }
+
+      var data = org.jsoup.Jsoup.connect(
+        "https://api.worldtradingdata.com/api/v1/stock?symbol=KOSPI.KS&api_token=mkgXnjQlBeDdpzHXsL5nWO7BUD0qVjRrW7onDWO9PcRGZNiE4kqT9Vah9FC1"
+      ).get();
+      console.log(data);
+
+      // here from another code
+    </script>
+    <!-- <div class="tabValue-3iOTI9jm">8635.9</div> -->
+  </body>
+</html>
