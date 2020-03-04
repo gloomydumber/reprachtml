@@ -1,0 +1,23 @@
+<html>
+  <head> </head>
+  <body>
+    <script>
+      const url = new URL("https://api.worldtradingdata.com/api/v1/stock");
+
+      let params = {
+        symbol: "KOSPI.KS", // SNAP,TWTR,VOD.L
+        api_token:
+          "mkgXnjQlBeDdpzHXsL5nWO7BUD0qVjRrW7onDWO9PcRGZNiE4kqT9Vah9FC1"
+      };
+      Object.keys(params).forEach(key =>
+        url.searchParams.append(key, params[key])
+      );
+
+      fetch(url, {
+        method: "GET"
+      })
+        .then(response => response.json())
+        .then(json => console.log(json));
+    </script>
+  </body>
+</html>
