@@ -25,10 +25,10 @@
     <div id="alarmDiv"></div>
     <br />
 
-    <!-- jQuery 고려 중.. -->
     <script>
-      // global variable from here
+      // jQuery 고려 중..
 
+      // global variable from here
       var objectmoney;
       var objecttime;
       // global variable ended
@@ -139,12 +139,22 @@
 
       /* from here ... */
       /* from here ... ended */
+
+      /* from here reloading test */
+
+      var req = new XMLHttpRequest();
+      req.open("POST", "/bithumbalpha.html", true);
+      req.onreadystatechange = function() {
+        if (req.readyState != 4 || req.status != 200) return;
+        document.getElementById("daegeum") = req.responseText;
+      };
+      /* reloading test ended */
     </script>
-    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
       var auto_refresh = setInterval(function() {
         $("#daegeum")
-          .load("bitumbalpha.html")
+          .load("refresh.html")
           .fadeIn("slow");
       }, 1000); // 새로고침  1000은 1초를 의미
     </script>
