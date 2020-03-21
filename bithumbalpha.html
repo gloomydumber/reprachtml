@@ -150,7 +150,7 @@
         var currentLocation = window.location;
         $("#daegeum")
           .fadeOut("slow")
-          .load(currentLocation + " #daegeum")
+          .load("#daegeum")
           .fadeIn("slow");
       }
       setInterval("autoRefresh_sample_div()", 1000); //30초 후 새로고침
