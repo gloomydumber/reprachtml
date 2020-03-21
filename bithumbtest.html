@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <!--
+    <input
+      type="button"
+      value="click it(익명함수화)"
+      onclick="fetch('https:/\/api.bithumb.com/public/ticker/ALL_KRW').then(function(response){response.text().then(function(text){document.querySelector('body').innerHTML=text;});}); console.log(1); console.log(2);"
+    />
+    -->
+    <script>
+      fetch("https:/\/api.bithumb.com/public/ticker/ALL_KRW").then(function(
+        response
+      ) {
+        response.text().then(function(text) {
+          // document.querySelector("body").innerHTML = text;
+          const json = text;
+          const obj = JSON.parse(json);
+          console.log(obj);
+          /* from here JSON for choochool*/
+          var total = 0;
+          for (var i in obj.data) {
+            console.log(i + " " + obj.data[i].acc_trade_value);
+            if (obj.data[i].acc_trade_value != undefined)
+              total += Number(obj.data[i].acc_trade_value);
+          }
+          // alert(obj.data.BTC.opening_price);
+          document.write(total);
+        });
+      });
+    </script>
+  </body>
+</html>
+<!-- wss://pubwss.bithumb.com/pub/ws -->
+<!-- https://api.bithumb.com/public/ticker/ALL_KRW -->
