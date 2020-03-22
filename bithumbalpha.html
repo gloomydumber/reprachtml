@@ -1,20 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <style>
+      button {
+        background: #1aab8a;
+        color: #fff;
+        border: none;
+        position: relative;
+        height: 35px;
+        font-size: 14px;
+        padding: 0 2em;
+        cursor: pointer;
+        transition: 800ms ease all;
+        outline: none;
+      }
+      button:hover {
+        background: #fff;
+        color: #1aab8a;
+      }
+      button:before,
+      button:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 2px;
+        width: 0;
+        background: #1aab8a;
+        transition: 400ms ease all;
+      }
+      button:after {
+        right: inherit;
+        top: inherit;
+        left: 0;
+        bottom: 0;
+      }
+      button:hover:before,
+      button:hover:after {
+        width: 100%;
+        transition: 800ms ease all;
+      }
+      body {
+        background-color: rgb(163, 204, 163);
+        color: rgb(0, 0, 0);
+      }
+      a {
+        color: rgb(0, 0, 0);
+      }
+    </style>
+  </head>
   <body>
     <input type="text" id="input_money" />
     <button onclick="button_One()">목표 금액 입력</button>
     <!-- <textarea id="tempout"></textarea> -->
     <button onclick="pharseAuto()">수동 갱신</button>
     <br />
+    <br />
     <input type="text" id="input_time" />
     <button onclick="button_Two()">시작 시간 입력</button>
     <a href="https://heavenly-appear.tistory.com/260" target="_sub"
       >유닉스 시간 계산기 1</a
     >
+    /
     <a
       href="http://www.hipenpal.com/tool/date-string-to-unix-time-mktime-converter-in-korean.php"
       target="_sub"
       >유닉스 시간 계산기 2</a
+    >
+    /
+    <a href="https://www.epochconverter.com/" target="_sub"
+      >유닉스 시간 계산기 3</a
     >
     <br />
     <br />
@@ -22,15 +77,31 @@
     <br />
     <div id="gijoontime"></div>
     <br />
-    <div id="alarmDiv"></div>
+    <div id="presentMoney"></div>
     <br />
-
+    <div id="presentTime"></div>
+    <br />
+    <div id="testID"></div>
+    <br />
+    <div id="remainTime"></div>
+    <br />
+    <div id="percentage"></div>
+    <br />
+    <div id="command"></div>
     <script>
       // jQuery 고려 중..
 
       // global variable from here
       var objectmoney;
       var objecttime;
+      var startmoney;
+      var marginalmoney;
+      var reloadingTotal = "Loading...";
+      var reloadingTime = "Loading...";
+      var i = 0; // for test
+      var onetimecheck_one = 0;
+      var onetimecheck_two = 0;
+      var functioncall_one = 0;
       // global variable ended
 
       /* from here JSON phasrsing*/
@@ -47,17 +118,18 @@
             if (obj.data[i].acc_trade_value != undefined)
               total += Number(obj.data[i].acc_trade_value);
           }
-          document.getElementById("daegeum").innerHTML = "거래대금 : " + total; // HTML visualization
+          document.getElementById("daegeum").innerHTML =
+            "거래대금(수동) : " + total; // HTML visualization
           document.getElementById("gijoontime").innerHTML =
-            "Bithumb 서버 기준 시각 " + msToTime(parseInt(timestamp));
+            "Bithumb 서버 기준 시각(수동) " + msToTime(parseInt(timestamp));
           if (objectmoney != undefined) {
             if (total > objectmoney) {
               console.log("if문안에 " + objectmoney);
-              document.getElementById("alarmDiv").innerHTML =
+              document.getElementById("command").innerHTML =
                 objectmoney + " 안됐어";
             } else {
               console.log("else문안에 " + objectmoney);
-              document.getElementById("alarmDiv").innerHTML =
+              document.getElementById("command").innerHTML =
                 objectmoney + " 됐어";
             }
           }
@@ -81,20 +153,45 @@
                 total += Number(obj.data[i].acc_trade_value);
             }
             document.getElementById("daegeum").innerHTML =
-              "거래대금 : " + total; // HTML visualization
+              "거래대금(수동) : " + total; // HTML visualization
             document.getElementById("gijoontime").innerHTML =
-              "Bithumb 서버 기준 시각 " + msToTime(parseInt(timestamp));
-            if (objectmoney != undefined) {
-              if (total > objectmoney) {
-                console.log("if문안에 " + objectmoney);
-                document.getElementById("alarmDiv").innerHTML =
-                  objectmoney + " 안됐어";
-              } else {
-                console.log("else문안에 " + objectmoney);
-                document.getElementById("alarmDiv").innerHTML =
-                  objectmoney + " 됐어";
-              }
+              "Bithumb 서버 기준 시각(수동) " + msToTime(parseInt(timestamp));
+          });
+        });
+      }
+
+      // 3rd....
+
+      function getTotal() {
+        var total_index = 0;
+        fetch("https:/\/api.bithumb.com/public/ticker/ALL_KRW").then(function(
+          response
+        ) {
+          response.text().then(function(text) {
+            const json = text;
+            const obj = JSON.parse(json);
+            for (var i in obj.data) {
+              // console.log(i + " " + obj.data[i].acc_trade_value);
+              if (obj.data[i].acc_trade_value != undefined)
+                total_index += Number(obj.data[i].acc_trade_value);
             }
+            console.log(total_index);
+            reloadingTotal = total_index;
+          });
+        });
+      }
+
+      // 4th ..
+      function getTime() {
+        var total_index = 0;
+        fetch("https:/\/api.bithumb.com/public/ticker/ALL_KRW").then(function(
+          response
+        ) {
+          response.text().then(function(text) {
+            const json = text;
+            const obj = JSON.parse(json);
+            timestamp = obj.data.date;
+            reloadingTime = msToTime(parseInt(timestamp));
           });
         });
       }
@@ -113,29 +210,127 @@
 
         return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
       }
+
+      function DisplayTime(nMSec) {
+        var nTotalSec = parseInt(nMSec / 1000);
+
+        var nTotalMin = parseInt(nTotalSec / 60);
+        var nHour = parseInt(nTotalMin / 60);
+        var nMin = nTotalMin % 60;
+        var nSec = nTotalSec % 60;
+
+        return (
+          (nHour < 10 ? "0" : "") +
+          nHour +
+          ":" +
+          (nMin < 10 ? "0" : "") +
+          nMin +
+          ":" +
+          (nSec < 10 ? "0" : "") +
+          nSec
+        );
+      }
+
       /* ms to Time function ended */
 
       /* from here button One function */
       function button_One() {
-        objectmoney = document.getElementById("input_money").value;
-        if (objectmoney != undefined) {
-          document.getElementById("alarmDiv").innerHTML =
-            objectmoney + "\\으로 이벤트 목표금액 설정 완료";
-        }
-        console.log(objectmoney);
+        if (onetimecheck_one == 0) {
+          objectmoney = document.getElementById("input_money").value;
+          document.getElementById("command").innerHTML =
+            objectmoney + "\\ 으로 이벤트 목표금액 설정 완료";
+          console.log(objectmoney);
+          onetimecheck_one += 1;
+        } else
+          alert(
+            "금액, 시간 설정은 한번만 해주세요.\nCtrl + Shift + R로 새로고침 해주세요.\n재입력시 지연이 생깁니다."
+          );
       }
       /* button One function ended */
 
       /* from here button Two function */
       function button_Two() {
-        objecttime = document.getElementById("input_time").value;
-        if (objecttime != undefined) {
-          document.getElementById("alarmDiv").innerHTML =
-            objecttime + " UNIX시로 이벤트 시작 시간 설정 완료";
-        }
-        console.log(objecttime);
+        if (onetimecheck_two == 0) {
+          objecttime = document.getElementById("input_time").value;
+          if (objecttime != undefined) {
+            document.getElementById("command").innerHTML =
+              objecttime + " UNIX시(ms)로 이벤트 시작 시간 설정 완료";
+          }
+          console.log(objecttime);
+          onetimecheck_two += 1;
+        } else
+          alert(
+            "금액, 시간 설정은 한번만 해주세요.\nCtrl + Shift + R로 새로고침 해주세요.\n재입력시 지연이 생깁니다."
+          );
       }
       /* button Two function ended */
+
+      setInterval(function testReload() {
+        document.getElementById("testID").innerHTML =
+          "Time Elapsed " + i + " second(s) from open this page...";
+        i++;
+      }, 1000);
+
+      setInterval(function reloadTotal() {
+        getTotal();
+        document.getElementById("presentMoney").innerHTML =
+          "거래대금(자동), 300ms : " + reloadingTotal;
+      }, 300);
+
+      setInterval(function reloadTime() {
+        getTime();
+        // timestamp 변수 이용해서, objecttime거에서빼자
+        var timecompare = objecttime * 1000; // 목표시간 * 1000 (ms timestamp 이기 때문에) timestamp가 이후 비교할 변수
+        var remaintime = timecompare - timestamp;
+        var timecheck = 0; // 버벅거림 제거
+        var remainPercent;
+        if (!isNaN(remaintime) && timecheck != 1) {
+          document.getElementById("remainTime").innerHTML =
+            "남은시간 : " + DisplayTime(remaintime);
+          // console.log("남은시간 : " + DisplayTime(remaintime));
+        }
+        document.getElementById("presentTime").innerHTML =
+          "현재시각(자동), 1000ms : " + reloadingTime;
+        if (timestamp >= timecompare && !isNaN(remaintime)) {
+          // 이벤트 시작 시간 지나 갔을 때!!
+          // console.log("이벤트 시작 시간 지나갔어");
+          // console.log("timestamp (현재): " + timestamp);
+          // soemeting();
+          //console.log("startmoney: " + startmoney);
+          timecheck = 1;
+          document.getElementById("remainTime").innerHTML =
+            "<text style='color:red'>이벤트 시작!!</text>";
+          if (typeof startmoney == "undefined") {
+            startmoney = reloadingTotal;
+          }
+          // console.log("startmoney (시작거래대금): " + startmoney); // 시작거래대금 = startmoney
+          // console.log("objectmoney (이벤트액수): " + objectmoney); // 이벤트액수 = objectmoney
+          // console.log("reloadingTotal : " + reloadingTotal); // 실시간거래대금 = reloadingTotal
+          // console.log("parseintreloadingtotal : " + parseInt(reloadingTotal));
+          remainPercent =
+            ((parseInt(reloadingTotal) - parseInt(startmoney)) /
+              parseInt(objectmoney)) *
+            100;
+          document.getElementById("percentage").innerHTML =
+            "<text style='color:blue'>" +
+            remainPercent.toFixed(3) +
+            " % </text>";
+
+          if (remainPercent >= 90 && remainPercent < 100) {
+            document.getElementById("command").innerHTML =
+              "<text style='color:yellow'> 90% 넘어감 !! </text>";
+          } else if (remainPercent >= 100) {
+            document.getElementById("command").innerHTML =
+              "<text style='color:red'> 100% 넘어감 !! </text>";
+            document.getElementById("remainTime").innerHTML =
+              "<text style='color:pink'>이벤트 끝남!!</text>";
+          }
+
+          // console.log("진행 percent : " + remainPercent.toFixed(4));
+        } //else if (!isNaN(remaintime)) {
+        //console.log("이벤트 시작 시간 안됐어");
+        //}
+      }, 300);
 
       /* from here ... */
       /* from here ... ended */
@@ -144,6 +339,8 @@
 
       /* reloading test ended */
     </script>
+
+    <!---
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
       function autoRefresh_sample_div() {
@@ -155,7 +352,7 @@
       }
       setInterval("autoRefresh_sample_div()", 1000); //30초 후 새로고침
     </script>
-  </body>
+  --></body>
 </html>
 <!-- wss://pubwss.bithumb.com/pub/ws -->
 <!-- https://api.bithumb.com/public/ticker/ALL_KRW -->
