@@ -312,10 +312,10 @@
               parseInt(objectmoney)) *
             100;
           document.getElementById("percentage").innerHTML =
-            "<text style='color:blue'>" +
+            "<text style='color:blue; font-size:40px'>" +
             remainPercent.toFixed(3) +
             " % </text>";
-
+          //"background-color:yellow; color:blue; font-size:150%;
           if (remainPercent >= 90 && remainPercent < 100) {
             document.getElementById("command").innerHTML =
               "<text style='color:yellow'> 90% 넘어감 !! </text>";
