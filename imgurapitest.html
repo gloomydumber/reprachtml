@@ -1,6 +1,5 @@
 <img id="image" src="http://dy.gnch.or.kr/img/no-image.jpg" />
 <br />
-<input id="file" type="file" class="btn purple" />
 
 <head>
   <style>
@@ -77,6 +76,8 @@
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
+
+<input id="file" type="file" class="btn purple" />
 <script>
   function openInNewTab(url) {
     var win = window.open(url, "_blank");
@@ -90,7 +91,7 @@
   var templink;
 
   function page_replace(result) {
-    location.replace(result);
+    location.href = result;
   }
 
   file.onchange = function (event) {
